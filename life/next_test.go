@@ -34,6 +34,17 @@ func TestNilGridReturnsNil(t *testing.T) {
 	}
 }
 
+func TestZeroRowsReturnANonNilGrid(t *testing.T) {
+	in := [][]bool{}
+	got := life.Next(in)
+	if got == nil {
+		t.Fatal("got nil, want a non-nil empty grid")
+	}
+	if len(got) != 0 {
+		t.Fatalf("got\n%s\nwant an empty grid", formatGrid(got))
+	}
+}
+
 func TestSameInputReturnsTheSameCellsWithoutSharedState(t *testing.T) {
 	start := parse(t, "OO\nOO")
 	want := parse(t, "OO\nOO")

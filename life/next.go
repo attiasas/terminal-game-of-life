@@ -6,6 +6,9 @@ func Next(grid [][]bool) [][]bool {
 	if grid == nil {
 		return nil
 	}
+	if len(grid) == 0 {
+		return [][]bool{}
+	}
 	return [][]bool{
 		{true, true},
 		{true, true},
