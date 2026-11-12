@@ -45,6 +45,19 @@ func TestZeroRowsReturnANonNilGrid(t *testing.T) {
 	}
 }
 
+func TestRaggedGridPanics(t *testing.T) {
+	ragged := [][]bool{
+		{false, false},
+		{false, false, true},
+	}
+	defer func() {
+		if recover() == nil {
+			t.Fatal("ragged grid did not panic")
+		}
+	}()
+	life.Next(ragged)
+}
+
 func TestZeroLengthRowsReturnANonNilGrid(t *testing.T) {
 	in := [][]bool{nil, nil}
 	got := life.Next(in)

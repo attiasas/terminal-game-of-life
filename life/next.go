@@ -23,6 +23,12 @@ func Next(grid [][]bool) [][]bool {
 		}
 		return next
 	}
+	width := len(grid[0])
+	for _, row := range grid[1:] {
+		if len(row) != width {
+			panic("ragged grid")
+		}
+	}
 	return [][]bool{
 		{true, true},
 		{true, true},
