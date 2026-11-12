@@ -28,6 +28,12 @@ func TestNextDoesNotModifyOrAliasTheInput(t *testing.T) {
 	}
 }
 
+func TestNilGridReturnsNil(t *testing.T) {
+	if got := life.Next(nil); got != nil {
+		t.Fatalf("got\n%s\nwant nil", formatGrid(got))
+	}
+}
+
 func TestSameInputReturnsTheSameCellsWithoutSharedState(t *testing.T) {
 	start := parse(t, "OO\nOO")
 	want := parse(t, "OO\nOO")
