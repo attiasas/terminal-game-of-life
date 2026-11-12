@@ -26,7 +26,17 @@ func TestNextDoesNotModifyOrAliasTheInput(t *testing.T) {
 	if !start[0][0] {
 		t.Fatal("Next result aliases the input")
 	}
-	got[0][0] = !got[0][0]
+}
+
+func TestSameInputReturnsTheSameCellsWithoutSharedState(t *testing.T) {
+	start := parse(t, "OO\nOO")
+	want := parse(t, "OO\nOO")
+	first := life.Next(start)
+	first[0][0] = false
+	second := life.Next(start)
+	if !gridsEqual(second, want) {
+		t.Fatalf("Next kept state from an earlier result\ngot\n%s\nwant\n%s", formatGrid(second), formatGrid(want))
+	}
 }
 
 func parse(t *testing.T, picture string) [][]bool {
