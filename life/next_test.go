@@ -7,6 +7,15 @@ import (
 	"github.com/attiasas/terminal-game-of-life/life"
 )
 
+func TestBlockIsUnchangedAfterOneGeneration(t *testing.T) {
+	start := parse(t, "OO\nOO")
+	got := life.Next(start)
+	want := parse(t, "OO\nOO")
+	if !gridsEqual(got, want) {
+		t.Fatalf("got\n%s\nwant\n%s", formatGrid(got), formatGrid(want))
+	}
+}
+
 func TestBlinkerFlipsThenReturnsToTheStart(t *testing.T) {
 	start := parse(t, "...\nOOO\n...")
 	flipped := parse(t, ".O.\n.O.\n.O.")
@@ -20,12 +29,27 @@ func TestBlinkerFlipsThenReturnsToTheStart(t *testing.T) {
 	}
 }
 
-func TestBlockIsUnchangedAfterOneGeneration(t *testing.T) {
-	start := parse(t, "OO\nOO")
-	got := life.Next(start)
-	want := parse(t, "OO\nOO")
-	if !gridsEqual(got, want) {
-		t.Fatalf("got\n%s\nwant\n%s", formatGrid(got), formatGrid(want))
+func TestGliderShiftsThenSettlesIntoACornerBlock(t *testing.T) {
+	start := parse(t, ".O..\n..O.\nOOO.\n....")
+	want4 := parse(t, "....\n..O.\n...O\n.OOO")
+	want7 := parse(t, "....\n....\n..OO\n..OO")
+
+	got := start
+	for range 4 {
+		got = life.Next(got)
+	}
+	if !gridsEqual(got, want4) {
+		t.Fatalf("generation 4\ngot\n%s\nwant\n%s", formatGrid(got), formatGrid(want4))
+	}
+	for range 3 {
+		got = life.Next(got)
+	}
+	if !gridsEqual(got, want7) {
+		t.Fatalf("generation 7\ngot\n%s\nwant\n%s", formatGrid(got), formatGrid(want7))
+	}
+	settled := life.Next(got)
+	if !gridsEqual(settled, want7) {
+		t.Fatalf("corner block changed\ngot\n%s\nwant\n%s", formatGrid(settled), formatGrid(want7))
 	}
 }
 
