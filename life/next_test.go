@@ -16,6 +16,19 @@ func TestBlockIsUnchangedAfterOneGeneration(t *testing.T) {
 	}
 }
 
+func TestNextDoesNotModifyOrAliasTheInput(t *testing.T) {
+	start := parse(t, "OO\nOO")
+	got := life.Next(start)
+	if !gridsEqual(start, parse(t, "OO\nOO")) {
+		t.Fatalf("Next modified the input\n%s", formatGrid(start))
+	}
+	got[0][0] = !got[0][0]
+	if !start[0][0] {
+		t.Fatal("Next result aliases the input")
+	}
+	got[0][0] = !got[0][0]
+}
+
 func parse(t *testing.T, picture string) [][]bool {
 	t.Helper()
 	picture = strings.TrimSpace(picture)
