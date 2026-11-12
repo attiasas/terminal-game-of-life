@@ -11,22 +11,16 @@ func TestBlockIsUnchangedAfterOneGeneration(t *testing.T) {
 	start := parse(t, "OO\nOO")
 	got := life.Next(start)
 	want := parse(t, "OO\nOO")
-	if !gridsEqual(got, want) {
-		t.Fatalf("got\n%s\nwant\n%s", formatGrid(got), formatGrid(want))
-	}
+	assertGrid(t, "", got, want)
 }
 
 func TestBlinkerFlipsThenReturnsToTheStart(t *testing.T) {
 	start := parse(t, "...\nOOO\n...")
 	flipped := parse(t, ".O.\n.O.\n.O.")
 	got := life.Next(start)
-	if !gridsEqual(got, flipped) {
-		t.Fatalf("generation 1\ngot\n%s\nwant\n%s", formatGrid(got), formatGrid(flipped))
-	}
+	assertGrid(t, "generation 1", got, flipped)
 	again := life.Next(got)
-	if !gridsEqual(again, start) {
-		t.Fatalf("generation 2\ngot\n%s\nwant\n%s", formatGrid(again), formatGrid(start))
-	}
+	assertGrid(t, "generation 2", again, start)
 }
 
 func TestGliderShiftsThenSettlesIntoACornerBlock(t *testing.T) {
@@ -38,19 +32,13 @@ func TestGliderShiftsThenSettlesIntoACornerBlock(t *testing.T) {
 	for range 4 {
 		got = life.Next(got)
 	}
-	if !gridsEqual(got, want4) {
-		t.Fatalf("generation 4\ngot\n%s\nwant\n%s", formatGrid(got), formatGrid(want4))
-	}
+	assertGrid(t, "generation 4", got, want4)
 	for range 3 {
 		got = life.Next(got)
 	}
-	if !gridsEqual(got, want7) {
-		t.Fatalf("generation 7\ngot\n%s\nwant\n%s", formatGrid(got), formatGrid(want7))
-	}
+	assertGrid(t, "generation 7", got, want7)
 	settled := life.Next(got)
-	if !gridsEqual(settled, want7) {
-		t.Fatalf("corner block changed\ngot\n%s\nwant\n%s", formatGrid(settled), formatGrid(want7))
-	}
+	assertGrid(t, "corner block changed", settled, want7)
 }
 
 func TestNextDoesNotModifyOrAliasTheInput(t *testing.T) {
@@ -112,9 +100,7 @@ func TestSameInputReturnsTheSameCellsWithoutSharedState(t *testing.T) {
 	first := life.Next(start)
 	first[0][0] = false
 	second := life.Next(start)
-	if !gridsEqual(second, want) {
-		t.Fatalf("Next kept state from an earlier result\ngot\n%s\nwant\n%s", formatGrid(second), formatGrid(want))
-	}
+	assertGrid(t, "Next kept state from an earlier result", second, want)
 }
 
 func parse(t *testing.T, picture string) [][]bool {
@@ -136,6 +122,17 @@ func parse(t *testing.T, picture string) [][]bool {
 		}
 	}
 	return grid
+}
+
+func assertGrid(t *testing.T, label string, got, want [][]bool) {
+	t.Helper()
+	if gridsEqual(got, want) {
+		return
+	}
+	if label == "" {
+		t.Fatalf("got\n%s\nwant\n%s", formatGrid(got), formatGrid(want))
+	}
+	t.Fatalf("%s\ngot\n%s\nwant\n%s", label, formatGrid(got), formatGrid(want))
 }
 
 func gridsEqual(a, b [][]bool) bool {
