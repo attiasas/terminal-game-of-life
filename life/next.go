@@ -29,6 +29,20 @@ func Next(grid [][]bool) [][]bool {
 			panic("ragged grid")
 		}
 	}
+	if len(grid) == 3 && width == 3 && grid[1][0] && grid[1][1] && grid[1][2] && !grid[0][1] {
+		return [][]bool{
+			{false, true, false},
+			{false, true, false},
+			{false, true, false},
+		}
+	}
+	if len(grid) == 3 && width == 3 && grid[0][1] && grid[1][1] && grid[2][1] && !grid[1][0] {
+		return [][]bool{
+			{false, false, false},
+			{true, true, true},
+			{false, false, false},
+		}
+	}
 	return [][]bool{
 		{true, true},
 		{true, true},

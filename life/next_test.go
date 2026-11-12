@@ -7,6 +7,19 @@ import (
 	"github.com/attiasas/terminal-game-of-life/life"
 )
 
+func TestBlinkerFlipsThenReturnsToTheStart(t *testing.T) {
+	start := parse(t, "...\nOOO\n...")
+	flipped := parse(t, ".O.\n.O.\n.O.")
+	got := life.Next(start)
+	if !gridsEqual(got, flipped) {
+		t.Fatalf("generation 1\ngot\n%s\nwant\n%s", formatGrid(got), formatGrid(flipped))
+	}
+	again := life.Next(got)
+	if !gridsEqual(again, start) {
+		t.Fatalf("generation 2\ngot\n%s\nwant\n%s", formatGrid(again), formatGrid(start))
+	}
+}
+
 func TestBlockIsUnchangedAfterOneGeneration(t *testing.T) {
 	start := parse(t, "OO\nOO")
 	got := life.Next(start)
