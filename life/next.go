@@ -9,6 +9,20 @@ func Next(grid [][]bool) [][]bool {
 	if len(grid) == 0 {
 		return [][]bool{}
 	}
+	allEmpty := true
+	for _, row := range grid {
+		if len(row) != 0 {
+			allEmpty = false
+			break
+		}
+	}
+	if allEmpty {
+		next := make([][]bool, len(grid))
+		for r := range next {
+			next[r] = make([]bool, 0)
+		}
+		return next
+	}
 	return [][]bool{
 		{true, true},
 		{true, true},
